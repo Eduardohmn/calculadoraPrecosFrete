@@ -62,7 +62,7 @@ const formatCurrency = (value) => {
 
 const STORAGE_KEY = 'calculadoraVendas.formulario';
 const camposFormulario = Array.from(document.querySelectorAll('input, select'));
-const camposComValoresPadrao = new Set(['comissao', 'impostos']);
+const camposComValoresPadrao = new Set(['comissao', 'impostos', 'margemAlvo']);
 
 // Elementos de Controle
 const tabML = document.getElementById('tabML');
@@ -332,20 +332,25 @@ try {
         }
         camposFormulario.forEach(campo => {
             if (!Object.prototype.hasOwnProperty.call(valoresSalvos, campo.id)) return;
-            if (camposComValoresPadrao.has(campo.id) && !String(valoresSalvos[campo.id]).trim()) return;
+            if (camposComValoresPadrao.has(campo.id) && !String(valoresSalvos[campo.id]).trim() && campo.id !== 'margemAlvo') return;
             if (campo.id === 'freteGratisRapido') {
                 campo.checked = freteRapidoOpcionalUsuario;
             } else if (campo.type === 'checkbox') {
                 campo.checked = Boolean(valoresSalvos[campo.id]);
             } else if (campo.id === 'margemAlvo') {
                 const margemSalva = parseFloat(valoresSalvos[campo.id]);
-                campo.value = (Number.isFinite(margemSalva) && margemSalva < 15) ? '15' : valoresSalvos[campo.id];
+                campo.value = (Number.isFinite(margemSalva) && margemSalva >= 15) ? String(margemSalva) : '15';
             } else {
                 campo.value = valoresSalvos[campo.id];
             }
         });
     }
 } catch {
+}
+
+const inputMargemAlvoInit = document.getElementById('margemAlvo');
+if (inputMargemAlvoInit && (!inputMargemAlvoInit.value || parseFloat(inputMargemAlvoInit.value) < 15)) {
+    inputMargemAlvoInit.value = '15';
 }
 
 atualizarOpcoesShopeeUI();
@@ -426,19 +431,27 @@ function calcular() {
     const elCompLucroShopee = document.getElementById('compLucroShopee');
     const elCompMargemShopee = document.getElementById('compMargemShopee');
 
+    const margemAlvoEl = document.getElementById('margemAlvo');
+    const margemDesejadaVal = parseFloat(margemAlvoEl ? margemAlvoEl.value : 15);
+    const pisoMargem = Math.max(15, Number.isFinite(margemDesejadaVal) ? margemDesejadaVal : 15);
+
     if (elCompLucroML) {
         elCompLucroML.textContent = formatCurrency(lucroML);
-        elCompLucroML.style.color = lucroML >= 0 ? 'var(--gold)' : 'var(--danger)';
+        elCompLucroML.style.color = (lucroML >= 0 && margemML >= pisoMargem) ? 'var(--gold)' : 'var(--danger)';
     }
     if (elCompMargemML) {
-        elCompMargemML.textContent = `${margemML.toFixed(1)}% Margem`;
+        const mlAbaixo15 = margemML < pisoMargem || lucroML < 0;
+        elCompMargemML.textContent = `${margemML.toFixed(1)}% Margem${mlAbaixo15 ? ' (Abaixo de 15%)' : ''}`;
+        elCompMargemML.style.color = mlAbaixo15 ? 'var(--danger)' : '';
     }
     if (elCompLucroShopee) {
         elCompLucroShopee.textContent = formatCurrency(resShopee.lucro);
-        elCompLucroShopee.style.color = resShopee.lucro >= 0 ? 'var(--shopee)' : 'var(--danger)';
+        elCompLucroShopee.style.color = (resShopee.lucro >= 0 && resShopee.margem >= pisoMargem) ? 'var(--shopee)' : 'var(--danger)';
     }
     if (elCompMargemShopee) {
-        elCompMargemShopee.textContent = `${resShopee.margem.toFixed(1)}% Margem`;
+        const shopeeAbaixo15 = resShopee.margem < pisoMargem || resShopee.lucro < 0;
+        elCompMargemShopee.textContent = `${resShopee.margem.toFixed(1)}% Margem${shopeeAbaixo15 ? ' (Abaixo de 15%)' : ''}`;
+        elCompMargemShopee.style.color = shopeeAbaixo15 ? 'var(--danger)' : '';
     }
 
     // 4. ATUALIZAR RESULTADOS DA PLATAFORMA ATIVA
@@ -451,12 +464,24 @@ function calcular() {
     resLucro.style.color = lucroAtivo >= 0 ? corTema : 'var(--danger)';
 
     const resMargem = document.getElementById('resMargem');
-    resMargem.textContent = `${margemAtiva.toFixed(1)}% Margem`;
-    resMargem.style.color = lucroAtivo >= 0 ? corTema : 'var(--danger)';
     resMargem.className = 'margin-badge ' + (plataformaAtiva === 'shopee' ? 'shopee-badge' : '');
-    resMargem.style.backgroundColor = lucroAtivo >= 0
-        ? (plataformaAtiva === 'shopee' ? 'rgba(238, 77, 45, 0.2)' : 'rgba(212, 175, 55, 0.2)')
-        : 'rgba(255, 82, 82, 0.2)';
+
+    if (lucroAtivo < 0) {
+        resMargem.textContent = `${margemAtiva.toFixed(1)}% Margem (Prejuízo)`;
+        resMargem.style.color = 'var(--danger)';
+        resMargem.style.backgroundColor = 'rgba(255, 82, 82, 0.25)';
+        resMargem.style.border = '1px solid var(--danger)';
+    } else if (margemAtiva < pisoMargem) {
+        resMargem.textContent = `⚠️ ${margemAtiva.toFixed(1)}% Margem (Abaixo do mínimo de 15%)`;
+        resMargem.style.color = 'var(--danger)';
+        resMargem.style.backgroundColor = 'rgba(255, 82, 82, 0.25)';
+        resMargem.style.border = '1px solid var(--danger)';
+    } else {
+        resMargem.textContent = `${margemAtiva.toFixed(1)}% Margem`;
+        resMargem.style.color = corTema;
+        resMargem.style.backgroundColor = plataformaAtiva === 'shopee' ? 'rgba(238, 77, 45, 0.2)' : 'rgba(212, 175, 55, 0.2)';
+        resMargem.style.border = 'none';
+    }
 
     // Detalhes da plataforma ativa
     const resLabelComissao = document.getElementById('resLabelComissao');
@@ -494,22 +519,19 @@ function calcular() {
 function calcularCustoMaximo() {
     const preco = parseFloat(document.getElementById('precoVenda').value) || 0;
     const margemAlvoInput = document.getElementById('margemAlvo');
-    const margemAlvoValor = parseFloat(margemAlvoInput.value);
+    let margemAlvoValor = parseFloat(margemAlvoInput.value);
 
     if (preco <= 0) {
         document.getElementById('resCustoMax').textContent = '';
         document.getElementById('resDetalheAlvo').textContent = 'Informe um preço de venda maior que zero.';
         return;
     }
-    if (margemAlvoInput.value.trim() === '' || !Number.isFinite(margemAlvoValor) || margemAlvoValor <= 0) {
-        document.getElementById('resCustoMax').textContent = '';
-        document.getElementById('resDetalheAlvo').textContent = 'Informe uma margem alvo maior que zero.';
-        return;
-    }
-    if (margemAlvoValor < 15) {
-        document.getElementById('resCustoMax').textContent = '';
-        document.getElementById('resDetalheAlvo').textContent = 'A margem desejada não pode ser menor que 15%.';
-        return;
+
+    // Trava rígida: se for vazio, inválido ou menor que 15, auto-corrige para 15%
+    if (!Number.isFinite(margemAlvoValor) || margemAlvoValor < 15) {
+        margemAlvoValor = 15;
+        margemAlvoInput.value = '15';
+        atualizarBotaoAdivinharCusto();
     }
 
     const impostosPct = parseFloat(document.getElementById('impostos').value) || 18.6;
@@ -571,24 +593,30 @@ function atualizarBotaoAdivinharCusto() {
     }
     if (menorQue15) {
         margemAlvoInput.style.borderColor = '#ff5252';
+        btnAdivinharCusto.disabled = true;
+        btnAdivinharCusto.title = 'A margem alvo não pode ser menor que 15%';
     } else {
         margemAlvoInput.style.borderColor = '';
+        btnAdivinharCusto.disabled = false;
+        btnAdivinharCusto.title = '';
     }
 
-    btnAdivinharCusto.hidden = !temPrecoValido || !Number.isFinite(margemAlvo) || margemAlvo < 15;
+    btnAdivinharCusto.hidden = !temPrecoValido;
 }
 
 const inputMargemAlvo = document.getElementById('margemAlvo');
-inputMargemAlvo.addEventListener('blur', () => {
-    if (inputMargemAlvo.value.trim() !== '') {
-        const val = parseFloat(inputMargemAlvo.value);
-        if (Number.isFinite(val) && val < 15) {
-            inputMargemAlvo.value = '15';
-            atualizarBotaoAdivinharCusto();
-            salvarFormulario();
-        }
+const sanitizarMargemMinima = () => {
+    let val = parseFloat(inputMargemAlvo.value);
+    if (!Number.isFinite(val) || val < 15) {
+        inputMargemAlvo.value = '15';
     }
-});
+    atualizarBotaoAdivinharCusto();
+    salvarFormulario();
+    calcular();
+};
+
+inputMargemAlvo.addEventListener('change', sanitizarMargemMinima);
+inputMargemAlvo.addEventListener('blur', sanitizarMargemMinima);
 
 btnAdivinharCusto.addEventListener('click', calcularCustoMaximo);
 
