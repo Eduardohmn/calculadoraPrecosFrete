@@ -51,7 +51,10 @@
                     </div>
                     <div class="input-group">
                         <label for="margemAlvo">Margem Alvo Desejada (%)</label>
-                        <input type="number" id="margemAlvo" min="5" step="1" placeholder="Ex: 20">
+                        <input type="number" id="margemAlvo" min="15" step="1" placeholder="Ex: 20 (mín. 15%)">
+                        <small id="msgMargemAlvo" style="color: #ff5252; font-size: 0.75rem; display: none; margin-top: 0.3rem;">
+                            ⚠️ A margem desejada não pode ser menor que 15%.
+                        </small>
                     </div>
                 </div>
 
@@ -158,15 +161,15 @@
 
                 <div class="details-list">
                     <div class="detail-item">
-                        <span id="resLabelComissao">Comissão ML:</span>
-                        <span id="resComissao"></span>
-                    </div>
-                    <div class="detail-item">
                         <span id="resLabelEnvio">Custo de Envio (Fixo/Frete):</span>
                         <div class="detail-value-group">
                             <span id="resEnvio" class="alert-text"></span>
                             <small id="resDetalheEnvio"></small>
                         </div>
+                    </div>
+                    <div class="detail-item">
+                        <span id="resLabelComissao">Comissão ML:</span>
+                        <span id="resComissao"></span>
                     </div>
                     <div class="detail-item">
                         <span>Impostos (<span id="resImpostosPct">18,6%</span>):</span>

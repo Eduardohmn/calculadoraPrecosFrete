@@ -337,6 +337,9 @@ try {
                 campo.checked = freteRapidoOpcionalUsuario;
             } else if (campo.type === 'checkbox') {
                 campo.checked = Boolean(valoresSalvos[campo.id]);
+            } else if (campo.id === 'margemAlvo') {
+                const margemSalva = parseFloat(valoresSalvos[campo.id]);
+                campo.value = (Number.isFinite(margemSalva) && margemSalva < 15) ? '15' : valoresSalvos[campo.id];
             } else {
                 campo.value = valoresSalvos[campo.id];
             }
@@ -503,9 +506,14 @@ function calcularCustoMaximo() {
         document.getElementById('resDetalheAlvo').textContent = 'Informe uma margem alvo maior que zero.';
         return;
     }
+    if (margemAlvoValor < 15) {
+        document.getElementById('resCustoMax').textContent = '';
+        document.getElementById('resDetalheAlvo').textContent = 'A margem desejada não pode ser menor que 15%.';
+        return;
+    }
 
     const impostosPct = parseFloat(document.getElementById('impostos').value) || 18.6;
-    const margemAlvoPct = Math.max(5, margemAlvoValor);
+    const margemAlvoPct = Math.max(15, margemAlvoValor);
     const valorMargemAlvo = preco * (margemAlvoPct / 100);
 
     let custoMaximoPermitido = 0;
@@ -550,11 +558,37 @@ function limparResultadoCustoMaximo() {
 
 function atualizarBotaoAdivinharCusto() {
     const preco = parseFloat(document.getElementById('precoVenda').value);
-    const margemAlvo = parseFloat(document.getElementById('margemAlvo').value);
-    btnAdivinharCusto.hidden =
-        !Number.isFinite(preco) || preco <= 0 ||
-        !Number.isFinite(margemAlvo) || margemAlvo <= 0;
+    const margemAlvoInput = document.getElementById('margemAlvo');
+    const margemAlvo = parseFloat(margemAlvoInput.value);
+    const msgMargemAlvo = document.getElementById('msgMargemAlvo');
+
+    const temPrecoValido = Number.isFinite(preco) && preco > 0;
+    const campoPreenchido = margemAlvoInput.value.trim() !== '';
+    const menorQue15 = campoPreenchido && Number.isFinite(margemAlvo) && margemAlvo < 15;
+
+    if (msgMargemAlvo) {
+        msgMargemAlvo.style.display = menorQue15 ? 'block' : 'none';
+    }
+    if (menorQue15) {
+        margemAlvoInput.style.borderColor = '#ff5252';
+    } else {
+        margemAlvoInput.style.borderColor = '';
+    }
+
+    btnAdivinharCusto.hidden = !temPrecoValido || !Number.isFinite(margemAlvo) || margemAlvo < 15;
 }
+
+const inputMargemAlvo = document.getElementById('margemAlvo');
+inputMargemAlvo.addEventListener('blur', () => {
+    if (inputMargemAlvo.value.trim() !== '') {
+        const val = parseFloat(inputMargemAlvo.value);
+        if (Number.isFinite(val) && val < 15) {
+            inputMargemAlvo.value = '15';
+            atualizarBotaoAdivinharCusto();
+            salvarFormulario();
+        }
+    }
+});
 
 btnAdivinharCusto.addEventListener('click', calcularCustoMaximo);
 
