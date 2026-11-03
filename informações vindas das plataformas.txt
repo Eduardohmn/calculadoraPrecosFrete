@@ -1,0 +1,84 @@
+Informações custo Mercado Livre
+O custo dos seus envios é calculado com base no peso e nas dimensões do seu produto já embalado. Usamos o maior valor entre o peso físico e o peso volumétrico. Entenda como funciona:
+1. Peso físico: é o peso real do pacote, medido em uma balança.
+2. Peso volumétrico: é calculado multiplicando altura x largura x profundidade e dividindo o resultado por 6.000.
+Após comparar os dois, usamos o maior peso para definir o custo. Você pode conferir o valor correspondente na nossa tabela de custos.
+Válido para produtos novos enviados por Envios Full, Coleta e Agências Mercado Livre ou conveniadas de todas as regiões do Brasil. 
+O custo dos Envios no Mercado Livre se aplica a todas as vendas, mesmo que o comprador pague pelo envio. Ele é calculado de acordo com o peso e as medidas do produto na embalagem final e no preço. Quando você fizer uma venda, descontaremos o custo na sua conta Mercado Pago, que estará refletido no detalhe da venda.
+Este custo inclui diferentes opções de frete grátis:
+•	Em anúncios de R$ 19 a R$ 78,99, o Mercado Livre oferece frete grátis padrão.
+•	Em anúncios a partir de R$ 79, você oferece frete grátis rápido.
+Oferecer frete grátis rápido em produtos abaixo de R$ 79 é opcional. Se você decidir oferecê-lo, pagará apenas essa tarifa de envio. Ver tarifas
+Descontos por reputação
+•	Até 50% de desconto nos seus custos por ter reputação verde. Os valores da tabela já incluem essa isenção.
+Custos dos Envios no Mercado Livre
+Deslize para ver mais colunas →
+Peso*	R$ 0 a R$ 18,99*	R$ 19 a R$ 48,99	R$ 49 a R$ 78,99	R$ 79 a R$ 99,99	R$ 100 a R$ 119,99	R$ 120 a R$ 149,99	R$ 150 a R$ 199,99	A partir de R$ 200
+Até 0,3 kg	R$ 5,65	R$ 6,85	R$ 8,15	R$ 12,95	R$ 14,95	R$ 16,95	R$ 19,05	R$ 21,65
+De 0,3 a 0,5 kg	R$ 5,95	R$ 6,95	R$ 8,25	R$ 13,85	R$ 16,15	R$ 18,15	R$ 20,45	R$ 23,25
+De 0,5 a 1 kg	R$ 6,05	R$ 7,15	R$ 8,45	R$ 14,45	R$ 16,85	R$ 19,05	R$ 21,35	R$ 24,45
+De 1 a 1,5 kg	R$ 6,15	R$ 7,35	R$ 8,65	R$ 14,75	R$ 17,15	R$ 19,45	R$ 21,75	R$ 25,45
+De 1,5 a 2 kg	R$ 6,25	R$ 7,45	R$ 8,75	R$ 15,05	R$ 17,65	R$ 19,85	R$ 22,25	R$ 25,55
+De 2 a 3 kg	R$ 6,35	R$ 8,65	R$ 9,15	R$ 16,45	R$ 19,15	R$ 21,65	R$ 24,35	R$ 27,05
+De 3 a 4 kg	R$ 6,45	R$ 8,75	R$ 9,75	R$ 17,85	R$ 20,75	R$ 23,35	R$ 26,35	R$ 29,25
+De 4 a 5 kg	R$ 6,55	R$ 8,85	R$ 10,25	R$ 19,75	R$ 22,85	R$ 26,05	R$ 29,25	R$ 32,45
+De 5 a 6 kg	R$ 6,65	R$ 8,95	R$ 10,35	R$ 25,95	R$ 29,15	R$ 33,35	R$ 36,45	R$ 40,85
+De 6 a 7 kg	R$ 6,75	R$ 9,05	R$ 10,45	R$ 27,55	R$ 31,65	R$ 36,75	R$ 40,85	R$ 45,25
+De 7 a 8 kg	R$ 6,85	R$ 9,25	R$ 10,55	R$ 29,45	R$ 34,35	R$ 39,25	R$ 44,15	R$ 49,35
+De 8 a 9 kg	R$ 6,95	R$ 9,35	R$ 10,65	R$ 30,25	R$ 35,25	R$ 40,35	R$ 45,35	R$ 50,75
+De 9 a 10 kg	R$ 7,05	R$ 9,45	R$ 10,85	R$ 38,25	R$ 45,05	R$ 51,95	R$ 58,75	R$ 65,85
+De 10 a 11 kg	R$ 7,05	R$ 9,65	R$ 11,05	R$ 41,65	R$ 48,55	R$ 55,45	R$ 62,35	R$ 69,35
+De 11 a 13 kg	R$ 7,15	R$ 10,05	R$ 11,45	R$ 42,55	R$ 49,75	R$ 56,85	R$ 63,85	R$ 70,95
+De 13 a 15 kg	R$ 7,25	R$ 10,25	R$ 11,65	R$ 45,55	R$ 52,95	R$ 60,55	R$ 68,15	R$ 75,65
+De 15 a 17 kg	R$ 7,35	R$ 10,45	R$ 11,85	R$ 48,95	R$ 56,55	R$ 64,05	R$ 71,35	R$ 79,35
+De 17 a 20 kg	R$ 7,45	R$ 10,65	R$ 12,05	R$ 55,15	R$ 64,35	R$ 73,55	R$ 82,75	R$ 91,95
+De 20 a 25 kg	R$ 7,65	R$ 11,05	R$ 12,25	R$ 64,55	R$ 75,75	R$ 85,45	R$ 96,25	R$ 106,85
+De 25 a 30 kg	R$ 7,75	R$ 11,25	R$ 12,45	R$ 66,45	R$ 76,05	R$ 86,25	R$ 97,15	R$ 107,85
+De 30 a 40 kg	R$ 7,85	R$ 11,45	R$ 12,65	R$ 68,35	R$ 79,65	R$ 89,75	R$ 100,05	R$ 107,95
+De 40 a 50 kg	R$ 7,95	R$ 11,65	R$ 12,85	R$ 70,95	R$ 81,85	R$ 92,85	R$ 103,45	R$ 111,65
+De 50 a 60 kg	R$ 8,05	R$ 11,85	R$ 13,05	R$ 75,55	R$ 87,25	R$ 99,05	R$ 110,25	R$ 119,05
+De 60 a 70 kg	R$ 8,15	R$ 12,05	R$ 13,25	R$ 80,95	R$ 93,75	R$ 105,95	R$ 118,05	R$ 127,45
+De 70 a 80 kg	R$ 8,25	R$ 12,25	R$ 13,45	R$ 84,65	R$ 97,95	R$ 110,75	R$ 123,35	R$ 133,15
+De 80 a 90 kg	R$ 8,35	R$ 12,45	R$ 13,65	R$ 94,05	R$ 108,35	R$ 122,95	R$ 136,95	R$ 147,85
+De 90 a 100 kg	R$ 8,45	R$ 12,65	R$ 13,85	R$ 107,45	R$ 124,85	R$ 140,45	R$ 156,45	R$ 168,85
+De 100 a 125 kg	R$ 8,55	R$ 12,85	R$ 14,05	R$ 120,15	R$ 138,95	R$ 156,95	R$ 174,85	R$ 188,85
+De 125 a 150 kg	R$ 8,65	R$ 12,85	R$ 14,25	R$ 127,45	R$ 147,05	R$ 166,55	R$ 185,55	R$ 200,35
+Mais de 150 kg	R$ 8,75	R$ 12,85	R$ 14,45	R$ 167,05	R$ 193,35	R$ 218,45	R$ 243,45	R$ 262,85
+Custos por oferecer frete grátis rápido para produtos abaixo de R$ 79 (opcional)
+Peso	R$ 0 a R$ 78,99*
+Até 0,3 kg	R$ 12,95
+De 0,3 a 0,5 kg	R$ 13,85
+De 0,5 a 1 kg	R$ 14,45
+De 1 a 1,5 kg	R$ 14,75
+De 1,5 a 2 kg	R$ 15,05
+De 2 a 3 kg	R$ 16,45
+De 3 a 4 kg	R$ 17,85
+De 4 a 5 kg	R$ 19,75
+De 5 a 6 kg	R$ 25,95
+De 6 a 7 kg	R$ 27,55
+De 7 a 8 kg	R$ 29,45
+De 8 a 9 kg	R$ 30,25
+De 9 a 10 kg	R$ 38,25
+De 10 a 11 kg	R$ 41,65
+De 11 a 13 kg	R$ 42,55
+De 13 a 15 kg	R$ 45,55
+De 15 a 17 kg	R$ 48,95
+De 17 a 20 kg	R$ 55,15
+De 20 a 25 kg	R$ 64,55
+De 25 a 30 kg	R$ 66,45
+De 30 a 40 kg	R$ 68,35
+De 40 a 50 kg	R$ 70,95
+De 50 a 60 kg	R$ 75,55
+De 60 a 70 kg	R$ 80,95
+De 70 a 80 kg	R$ 84,65
+De 80 a 90 kg	R$ 94,05
+De 90 a 100 kg	R$ 107,45
+De 100 a 125 kg	R$ 120,15
+De 125 a 150 kg	R$ 127,45
+Mais de 150 kg	R$ 167,05
+*Os produtos de menos de R$ 19 pagam no máximo metade do preço do produto.
+Fontes:
+https://www.mercadolivre.com.br/ajuda/Custos-de-frete-gratis-pelo-Mercado-Envios_3362
+https://www.mercadolivre.com.br/ajuda/Como-calcular-o-custo-dos-seus_4413
+https://www.mercadolivre.com.br/ajuda/40538
+

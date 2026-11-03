@@ -1,0 +1,33 @@
+name: Verificação Semanal de Taxas
+
+on:
+  schedule:
+    # Executa toda segunda-feira às 12:00 UTC (09:00 no horário de Brasília)
+    - cron: '0 12 * * 1'
+  workflow_dispatch: # Permite acionar manualmente a qualquer momento pelo GitHub
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Executar verificação e auditoria das taxas
+        run: node scripts/verificar_taxas.js
+
+      - name: Commitar e salvar atualização no repositório
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add taxas_config.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: atualização semanal automática das taxas [skip ci]" && git push)
+

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Multi-Canal (ML & Shopee)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>Calculadora de Margem de Vendas</h1>
+            <div class="sync-status-badge" id="syncStatusBadge" title="Atualizado automaticamente toda semana">
+                <span class="sync-dot"></span>
+                <span>Taxas verificadas em: <strong id="lblUltimaVerif">03/11/2026</strong> • Próxima checagem: <strong id="lblProximaVerif">09/11/2026</strong></span>
+            </div>
+            <nav class="platform-tabs" role="tablist">
+                <button type="button" class="tab-btn active" id="tabML" data-platform="ml">
+                    <span>💛</span> Mercado Livre
+                </button>
+                <button type="button" class="tab-btn" id="tabShopee" data-platform="shopee">
+                    <span>🧡</span> Shopee
+                </button>
+                <button type="button" class="tab-btn" id="tabTikTok" data-platform="tiktok" disabled title="Próxima plataforma a ser implementada">
+                    <span>🎵</span> TikTok Shop <small>(em breve)</small>
+                </button>
+                <button type="button" class="tab-btn" id="tabSite" data-platform="site" disabled title="Próxima plataforma a ser implementada">
+                    <span>🌐</span> Site Próprio <small>(em breve)</small>
+                </button>
+            </nav>
+        </header>
+        
+        <div class="calculator-grid">
+            <!-- Coluna de Entradas -->
+            <section class="inputs-section">
+                <!-- Entradas Compartilhadas -->
+                <div class="input-group">
+                    <label for="precoVenda">Preço de Venda do Produto (R$)</label>
+                    <input type="number" id="precoVenda" step="0.01" placeholder="Ex: 62.00">
+                </div>
+                
+                <div class="input-group">
+                    <label for="precoCusto">Preço de Custo + Embalagem (R$)</label>
+                    <input type="number" id="precoCusto" step="0.01" placeholder="Ex: 20.42">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="impostos">Impostos (%)</label>
+                        <input type="number" id="impostos" value="18.6" step="0.1" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label for="margemAlvo">Margem Alvo Desejada (%)</label>
+                        <input type="number" id="margemAlvo" min="5" step="1" placeholder="Ex: 20">
+                    </div>
+                </div>
+
+                <!-- Painel Específico: Mercado Livre -->
+                <div id="painelML" class="platform-panel">
+                    <div class="input-group">
+                        <label for="comissao">Tarifa Mercado Livre (%)</label>
+                        <input type="number" id="comissao" value="12" step="1" readonly>
+                    </div>
+
+                    <label class="lock-toggle" for="travaTaxas">
+                        <input type="checkbox" id="travaTaxas" checked>
+                        <span>Travar tarifa e impostos</span>
+                    </label>
+
+                    <h3 class="section-title">Logística (Mercado Envios)</h3>
+                    <div class="input-row triple">
+                        <div class="input-group">
+                            <label for="comp">Comp. (cm)</label>
+                            <input type="number" id="comp" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="larg">Larg. (cm)</label>
+                            <input type="number" id="larg" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="alt">Alt. (cm)</label>
+                            <input type="number" id="alt" step="1">
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="pesoFisico">Peso Físico (kg)</label>
+                            <input type="number" id="pesoFisico" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label for="reputacao">Sua Reputação</label>
+                            <select id="reputacao">
+                                <option value="" selected disabled>Selecione...</option>
+                                <option value="verde">Verde / Sem Reputação</option>
+                                <option value="amarela">Amarela</option>
+                                <option value="vermelha">Laranja / Vermelha</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="lock-toggle" for="freteGratisRapido" id="wrapFreteGratisRapido">
+                        <input type="checkbox" id="freteGratisRapido">
+                        <span id="labelFreteGratisRapido">Oferecer frete grátis rápido (opcional &lt; R$ 79)</span>
+                    </label>
+                </div>
+
+                <!-- Painel Específico: Shopee -->
+                <div id="painelShopee" class="platform-panel" hidden>
+                    <h3 class="section-title shopee-title">Configurações de Venda Shopee</h3>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="shopeeTipoVendedor">Modalidade do Vendedor</label>
+                            <select id="shopeeTipoVendedor">
+                                <option value="cnpj" selected>Vendedor CNPJ (Empresa)</option>
+                                <option value="cpf">Vendedor CPF (Pessoa Física)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="wrapShopeeCpfOpcoes" hidden>
+                        <label class="lock-toggle" for="shopeeCpfMais450">
+                            <input type="checkbox" id="shopeeCpfMais450" class="shopee-accent">
+                            <span>Mais de 450 pedidos em 90 dias (+ R$ 3,00 de taxa por item)</span>
+                        </label>
+                    </div>
+
+                    <div class="info-banner shopee-banner">
+                        <div>
+                            <strong>Comissão Shopee Aplicada:</strong>
+                            <div class="info-badge" id="shopeeBadgeComissao">20% + R$ 4,50</div>
+                        </div>
+                        <small id="shopeeRegraNota" style="display:block; margin-top:0.4rem; color: #aaa;">
+                            * Taxa fixa ajustada para R$ 4,50 (out/2026). Para itens &lt; R$ 9,00 a taxa fixa é limitada a metade do preço.
+                        </small>
+                    </div>
+
+                    <label class="lock-toggle" for="shopeePix">
+                        <input type="checkbox" id="shopeePix" class="shopee-accent">
+                        <span>Venda via Pix (com Subsídio Pix Shopee de 5% a 8%)</span>
+                    </label>
+
+                    <div class="info-banner" style="font-size: 0.8rem; border-left-color: #4caf50;">
+                        <span>📦 <strong>Programa Frete Grátis:</strong> A taxa de comissão já contempla a taxa de transação e o frete grátis. Cupons subsidiados pela Shopee.</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Coluna de Resultados -->
+            <section class="results-section">
+                <div class="result-card highlight" id="cardLucroPrincipal">
+                    <h4 id="resTituloPlataforma">Lucro Líquido (Mercado Livre)</h4>
+                    <span id="resLucro"></span>
+                    <div class="margin-badge" id="resMargem"></div>
+                </div>
+
+                <div class="details-list">
+                    <div class="detail-item">
+                        <span id="resLabelComissao">Comissão ML:</span>
+                        <span id="resComissao"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span id="resLabelEnvio">Custo de Envio (Fixo/Frete):</span>
+                        <div class="detail-value-group">
+                            <span id="resEnvio" class="alert-text"></span>
+                            <small id="resDetalheEnvio"></small>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <span>Impostos (<span id="resImpostosPct">18,6%</span>):</span>
+                        <span id="resImpostos"></span>
+                    </div>
+                </div>
+
+                <div class="result-card" id="cardCustoMaximo">
+                    <h4>Custo Máximo Permitido (Compra + Emb.)</h4>
+                    <span id="resCustoMax" class="gold-text"></span>
+                    <small id="resDetalheAlvo">Informe o preço de venda e a margem alvo para adivinhar o custo.</small>
+                    <button type="button" id="btnAdivinharCusto" class="action-button">
+                        Adivinhar custo
+                    </button>
+                </div>
+
+                <div class="result-card" id="cardPesoML">
+                    <h4>Peso Faturado ML (Cobrado)</h4>
+                    <span id="resPeso" class="gold-text"></span>
+                    <small id="resDetalhePeso"></small>
+                </div>
+
+                <!-- Card Comparativo Multi-Plataforma -->
+                <div class="comparison-card" id="cardComparativo">
+                    <h4>Comparativo de Lucro entre Plataformas</h4>
+                    <div class="comparison-grid">
+                        <div class="comp-col ml-col">
+                            <div class="comp-title">Mercado Livre</div>
+                            <span class="comp-lucro" id="compLucroML">-</span>
+                            <span class="comp-margem" id="compMargemML">-</span>
+                        </div>
+                        <div class="comp-col shopee-col">
+                            <div class="comp-title">Shopee</div>
+                            <span class="comp-lucro" id="compLucroShopee">-</span>
+                            <span class="comp-margem" id="compMargemShopee">-</span>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
