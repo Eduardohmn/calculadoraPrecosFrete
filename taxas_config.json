@@ -1,11 +1,13 @@
 {
   "ultimaVerificacao": "2026-11-03",
   "proximaVerificacao": "2026-11-09",
+  "statusGeral": "atualizado",
   "frequencia": "Toda segunda-feira às 09:00 (America/Sao_Paulo)",
   "plataformas": {
     "mercadoLivre": {
       "nome": "Mercado Livre",
       "status": "atualizado",
+      "detalheStatus": "Matriz de 30 faixas e parâmetros revisados com a documentação oficial.",
       "fontesOficiais": [
         "https://www.mercadolivre.com.br/ajuda/Custos-de-frete-gratis-pelo-Mercado-Envios_3362",
         "https://www.mercadolivre.com.br/ajuda/Como-calcular-o-custo-dos-seus_4413"
@@ -57,8 +59,9 @@
     "shopee": {
       "nome": "Shopee",
       "status": "atualizado",
+      "detalheStatus": "Faixas de comissão e taxa fixa base revisadas conforme vigência out/2026.",
       "fontesOficiais": [
-        "https://seller.shopee.com.br/edu/article/17855"
+        "https://seller.shopee.com.br/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026"
       ],
       "ultimaRevisao": "2026-10-01",
       "parametrosChave": {

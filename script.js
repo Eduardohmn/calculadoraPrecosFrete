@@ -154,8 +154,9 @@ function isFreteGratisRapidoAtivo(preco) {
 // ==================== CÁLCULO DE FRETE MERCADO LIVRE ====================
 function calcularCustoEnvioML(preco, pesoFaturado, reputacao, freteGratisRapido = false) {
     if (preco <= 0) return { custo: 0, detalhe: '' };
+    const pesoValido = Math.max(0, Number.isFinite(pesoFaturado) ? pesoFaturado : 0);
 
-    let rowIndex = pesoLimitesML.findIndex(limite => pesoFaturado <= limite);
+    let rowIndex = pesoLimitesML.findIndex(limite => pesoValido <= limite);
     if (rowIndex === -1) rowIndex = pesoLimitesML.length - 1;
 
     let colIndex = 0;
@@ -206,6 +207,9 @@ function calcularCustoEnvioML(preco, pesoFaturado, reputacao, freteGratisRapido 
 
 // ==================== CÁLCULO OFICIAL SHOPEE ====================
 function calcularShopee(preco, custo, impostosPct, tipoVendedor, cpfMais450, vendaPix) {
+    custo = Math.max(0, Number.isFinite(custo) ? custo : 0);
+    impostosPct = Math.max(0, Number.isFinite(impostosPct) ? impostosPct : 0);
+
     if (preco <= 0) {
         return {
             comissao: 0,
@@ -317,6 +321,26 @@ function calcularShopee(preco, custo, impostosPct, tipoVendedor, cpfMais450, ven
     };
 }
 
+// ==================== VALIDAÇÃO DE ENTRADAS NÃO-NEGATIVAS ====================
+function sanitizarCampoNaoNegativo(campo) {
+    if (!campo || campo.type !== 'number' || campo.id === 'margemAlvo') return;
+    const raw = String(campo.value);
+    if (!raw.trim()) return;
+    const num = parseFloat(raw);
+    if (raw.includes('-') || (Number.isFinite(num) && num < 0)) {
+        campo.value = '0';
+    }
+}
+
+function lerNumeroNaoNegativo(id, padrao = 0) {
+    const el = document.getElementById(id);
+    if (!el) return padrao;
+    sanitizarCampoNaoNegativo(el);
+    const val = parseFloat(el.value);
+    if (!Number.isFinite(val)) return padrao;
+    return Math.max(0, val);
+}
+
 // ==================== RESTAURAÇÃO LOCAL STORAGE ====================
 try {
     const valoresSalvos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
@@ -342,6 +366,7 @@ try {
                 campo.value = (Number.isFinite(margemSalva) && margemSalva >= 15) ? String(margemSalva) : '15';
             } else {
                 campo.value = valoresSalvos[campo.id];
+                sanitizarCampoNaoNegativo(campo);
             }
         });
     }
@@ -357,6 +382,8 @@ atualizarOpcoesShopeeUI();
 
 // ==================== CÁLCULO GERAL E ATUALIZAÇÃO DOM ====================
 function calcular() {
+    camposFormulario.forEach(sanitizarCampoNaoNegativo);
+
     const existeEntrada = camposFormulario.some(campo =>
         campo.type !== 'checkbox' &&
         !camposComValoresPadrao.has(campo.id) &&
@@ -374,16 +401,16 @@ function calcular() {
         });
         const elImpostosPct = document.getElementById('resImpostosPct');
         if (elImpostosPct) {
-            const impostosPct = parseFloat(document.getElementById('impostos').value) || 18.6;
+            const impostosPct = lerNumeroNaoNegativo('impostos', 18.6);
             elImpostosPct.textContent = `${impostosPct.toString().replace('.', ',')}%`;
         }
         return;
     }
 
-    const preco = parseFloat(document.getElementById('precoVenda').value) || 0;
-    const custo = parseFloat(document.getElementById('precoCusto').value) || 0;
-    const comissaoPctML = parseFloat(document.getElementById('comissao').value) || 0;
-    const impostosPct = parseFloat(document.getElementById('impostos').value) || 18.6;
+    const preco = lerNumeroNaoNegativo('precoVenda', 0);
+    const custo = lerNumeroNaoNegativo('precoCusto', 0);
+    const comissaoPctML = lerNumeroNaoNegativo('comissao', 0);
+    const impostosPct = lerNumeroNaoNegativo('impostos', 18.6);
 
     // Atualizar percentual de imposto visível
     const elImpostosPct = document.getElementById('resImpostosPct');
@@ -394,10 +421,10 @@ function calcular() {
     // 1. CÁLCULO MERCADO LIVRE
     sincronizarFreteRapidoUI(preco);
     const freteGratisRapidoML = isFreteGratisRapidoAtivo(preco);
-    const comp = parseFloat(document.getElementById('comp').value) || 0;
-    const larg = parseFloat(document.getElementById('larg').value) || 0;
-    const alt = parseFloat(document.getElementById('alt').value) || 0;
-    const pesoFisico = parseFloat(document.getElementById('pesoFisico').value) || 0;
+    const comp = lerNumeroNaoNegativo('comp', 0);
+    const larg = lerNumeroNaoNegativo('larg', 0);
+    const alt = lerNumeroNaoNegativo('alt', 0);
+    const pesoFisico = lerNumeroNaoNegativo('pesoFisico', 0);
     const reputacao = document.getElementById('reputacao').value;
 
     const pesoVolumetrico = (comp * larg * alt) / 6000;
@@ -517,7 +544,8 @@ function calcular() {
 
 // ==================== ADIVINHAR CUSTO MÁXIMO ====================
 function calcularCustoMaximo() {
-    const preco = parseFloat(document.getElementById('precoVenda').value) || 0;
+    camposFormulario.forEach(sanitizarCampoNaoNegativo);
+    const preco = lerNumeroNaoNegativo('precoVenda', 0);
     const margemAlvoInput = document.getElementById('margemAlvo');
     let margemAlvoValor = parseFloat(margemAlvoInput.value);
 
@@ -534,18 +562,18 @@ function calcularCustoMaximo() {
         atualizarBotaoAdivinharCusto();
     }
 
-    const impostosPct = parseFloat(document.getElementById('impostos').value) || 18.6;
+    const impostosPct = lerNumeroNaoNegativo('impostos', 18.6);
     const margemAlvoPct = Math.max(15, margemAlvoValor);
     const valorMargemAlvo = preco * (margemAlvoPct / 100);
 
     let custoMaximoPermitido = 0;
 
     if (plataformaAtiva === 'ml') {
-        const comissaoPct = parseFloat(document.getElementById('comissao').value) || 0;
-        const comp = parseFloat(document.getElementById('comp').value) || 0;
-        const larg = parseFloat(document.getElementById('larg').value) || 0;
-        const alt = parseFloat(document.getElementById('alt').value) || 0;
-        const pesoFisico = parseFloat(document.getElementById('pesoFisico').value) || 0;
+        const comissaoPct = lerNumeroNaoNegativo('comissao', 0);
+        const comp = lerNumeroNaoNegativo('comp', 0);
+        const larg = lerNumeroNaoNegativo('larg', 0);
+        const alt = lerNumeroNaoNegativo('alt', 0);
+        const pesoFisico = lerNumeroNaoNegativo('pesoFisico', 0);
         const pesoVolumetrico = (comp * larg * alt) / 6000;
         const pesoFaturado = Math.max(pesoFisico, pesoVolumetrico);
         const reputacao = document.getElementById('reputacao').value;
@@ -579,7 +607,7 @@ function limparResultadoCustoMaximo() {
 }
 
 function atualizarBotaoAdivinharCusto() {
-    const preco = parseFloat(document.getElementById('precoVenda').value);
+    const preco = lerNumeroNaoNegativo('precoVenda', 0);
     const margemAlvoInput = document.getElementById('margemAlvo');
     const margemAlvo = parseFloat(margemAlvoInput.value);
     const msgMargemAlvo = document.getElementById('msgMargemAlvo');
@@ -634,6 +662,7 @@ atualizarTravaTaxas();
 function salvarFormulario() {
     const valores = { plataformaAtiva };
     camposFormulario.forEach(campo => {
+        sanitizarCampoNaoNegativo(campo);
         if (campo.id === 'freteGratisRapido') {
             valores[campo.id] = freteRapidoOpcionalUsuario;
         } else {
@@ -648,10 +677,21 @@ function salvarFormulario() {
 }
 
 camposFormulario.forEach(campo => {
+    if (campo.type === 'number') {
+        campo.addEventListener('keydown', (e) => {
+            if (e.key === '-' || e.key === '+') {
+                e.preventDefault();
+            }
+        });
+        campo.addEventListener('change', () => sanitizarCampoNaoNegativo(campo));
+        campo.addEventListener('blur', () => sanitizarCampoNaoNegativo(campo));
+    }
+
     const evento = campo.type === 'checkbox' || campo.tagName === 'SELECT' ? 'change' : 'input';
     campo.addEventListener(evento, () => {
+        sanitizarCampoNaoNegativo(campo);
         if (campo.id === 'freteGratisRapido') {
-            const precoAtual = parseFloat(document.getElementById('precoVenda').value) || 0;
+            const precoAtual = lerNumeroNaoNegativo('precoVenda', 0);
             if (precoAtual < 79) {
                 freteRapidoOpcionalUsuario = campo.checked;
             }
@@ -679,19 +719,53 @@ function formatarDataBR(dataIso) {
 function aplicarConfiguracaoTaxas(config) {
     if (!config || typeof config !== 'object') return;
 
-    // 1. Atualizar badges na UI
+    const ml = config.plataformas?.mercadoLivre;
+    const sh = config.plataformas?.shopee;
+
+    // 1. Atualizar badges na UI com datas e status reais de cada plataforma
     const lblUltimaVerif = document.getElementById('lblUltimaVerif');
+    const lblRevisaoML = document.getElementById('lblRevisaoML');
+    const lblRevisaoShopee = document.getElementById('lblRevisaoShopee');
     const lblProximaVerif = document.getElementById('lblProximaVerif');
+    const syncDot = document.getElementById('syncDot');
+    const syncBadge = document.getElementById('syncStatusBadge');
+
     if (lblUltimaVerif && config.ultimaVerificacao) {
         lblUltimaVerif.textContent = formatarDataBR(config.ultimaVerificacao);
+    }
+    if (lblRevisaoML && ml?.ultimaRevisao) {
+        lblRevisaoML.textContent = formatarDataBR(ml.ultimaRevisao);
+    }
+    if (lblRevisaoShopee && sh?.ultimaRevisao) {
+        lblRevisaoShopee.textContent = formatarDataBR(sh.ultimaRevisao);
     }
     if (lblProximaVerif && config.proximaVerificacao) {
         lblProximaVerif.textContent = formatarDataBR(config.proximaVerificacao);
     }
 
+    const statusML = ml?.status || 'desconhecido';
+    const statusShopee = sh?.status || 'desconhecido';
+    const tudoAtualizado = (statusML === 'atualizado' || statusML === 'verificado') &&
+                           (statusShopee === 'atualizado' || statusShopee === 'verificado');
+    const temDivergencia = statusML === 'divergencia_detectada' || statusShopee === 'divergencia_detectada';
+
+    if (syncDot) {
+        syncDot.classList.remove('warning', 'error');
+        if (temDivergencia) {
+            syncDot.classList.add('error');
+        } else if (!tudoAtualizado) {
+            syncDot.classList.add('warning');
+        }
+    }
+
+    if (syncBadge) {
+        const msgML = ml?.detalheStatus ? `ML: ${ml.detalheStatus}` : `ML: ${statusML}`;
+        const msgShopee = sh?.detalheStatus ? `Shopee: ${sh.detalheStatus}` : `Shopee: ${statusShopee}`;
+        syncBadge.title = `${msgML} | ${msgShopee}`;
+    }
+
     // 2. Atualizar Mercado Livre se disponível
-    if (config.plataformas && config.plataformas.mercadoLivre) {
-        const ml = config.plataformas.mercadoLivre;
+    if (ml) {
         if (Array.isArray(ml.freteMatrix) && ml.freteMatrix.length === 30) {
             freteMatrixML = ml.freteMatrix;
         }
@@ -701,8 +775,7 @@ function aplicarConfiguracaoTaxas(config) {
     }
 
     // 3. Atualizar Shopee se disponível
-    if (config.plataformas && config.plataformas.shopee) {
-        const sh = config.plataformas.shopee;
+    if (sh) {
         if (sh.parametrosChave) {
             shopeeConfig.taxaFixaBase = sh.parametrosChave.taxaFixaBase ?? shopeeConfig.taxaFixaBase;
             shopeeConfig.limitePrecoTeto = sh.parametrosChave.limitePrecoTeto ?? shopeeConfig.limitePrecoTeto;
