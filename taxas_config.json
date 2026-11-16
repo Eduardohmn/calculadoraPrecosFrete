@@ -1,6 +1,6 @@
 {
   "ultimaVerificacao": "2026-11-03",
-  "proximaVerificacao": "2026-11-16",
+  "proximaVerificacao": "2026-11-23",
   "statusGeral": "verificacao_parcial",
   "frequencia": "Toda segunda-feira às 09:00 (America/Sao_Paulo)",
   "plataformas": {
@@ -352,7 +352,7 @@
           262.85
         ]
       ],
-      "ultimaTentativa": "2026-11-09"
+      "ultimaTentativa": "2026-11-16"
     },
     "shopee": {
       "nome": "Shopee",
@@ -401,8 +401,8 @@
           "subsidioPixPct": 8
         }
       ],
-      "ultimaTentativa": "2026-11-09"
+      "ultimaTentativa": "2026-11-16"
     }
   },
-  "ultimaTentativaVerificacao": "2026-11-09"
+  "ultimaTentativaVerificacao": "2026-11-16"
 }
